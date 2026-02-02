@@ -50,7 +50,7 @@ export const generateDailyInsight = async (
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
+            model: 'gemini-1.5-flash',
             contents: prompt,
         });
         return response.text || "Keep tracking to see your progress!";
