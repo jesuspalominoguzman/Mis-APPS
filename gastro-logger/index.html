@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gastro-Logger</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg: "#FAFAFA", // Gray 50 - Fondo muy limpio y neutro
+            surface: "#FFFFFF",
+            border: "#E5E7EB", // Gray 200
+            text: "#1F2937", // Gray 800 - Texto oscuro neutro para legibilidad
+            "text-light": "#6B7280", // Gray 500
+            primary: "#6B21A8", // Purple 800 - Morado Profundo y Elegante
+            "primary-dark": "#4C1D95", // Purple 900
+            "primary-light": "#F3E8FF", // Purple 100
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            serif: ["Playfair Display", "serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          },
+          boxShadow: {
+            'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+            'floating': '0 20px 25px -5px rgba(107, 33, 168, 0.3), 0 10px 10px -5px rgba(107, 33, 168, 0.1)'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FAFAFA;
+      color: #1F2937;
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    input, select, textarea {
+      outline: none;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D8B4FE;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A855F7;
+    }
+  </style>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react": "https://esm.sh/react@^19.2.4",
+    "@google/genai": "https://esm.sh/@google/genai@^1.39.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body class="selection:bg-primary-light selection:text-primary-dark">
+  <div id="root"></div>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
