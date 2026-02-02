@@ -1,6 +1,6 @@
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { getSettings, saveSettings, getEntries, clearData } from '../services/storageService';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { getSettings, saveSettings, getEntries, clearData, exportData, importData } from '../services/storageService';
 import { requestNotificationPermission } from '../services/notificationService';
 import { UserSettings } from '../types';
 import { TRANSLATIONS } from '../constants';
@@ -14,6 +14,7 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate }) => {
     const [settings, setSettings] = useState<UserSettings>(getSettings());
     const [permissionStatus, setPermissionStatus] = useState<NotificationPermission>('default');
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const t = TRANSLATIONS[settings.language] || TRANSLATIONS.en;
 
@@ -68,7 +69,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate
         if (newState && permissionStatus !== 'granted') {
             const granted = await requestNotificationPermission();
             if (!granted) {
-                alert("Permission denied.");
+                alert("Permission denied. Enable notifications in your browser settings.");
                 return;
             }
             setPermissionStatus('granted');
@@ -112,6 +113,41 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate
         }
     };
 
+    // Export Data
+    const handleExport = () => {
+        const json = exportData();
+        const blob = new Blob([json], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `take-your-time-backup-${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    };
+
+    // Import Data
+    const triggerImport = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const result = event.target?.result as string;
+            if (importData(result)) {
+                alert(t.importSuccess);
+                window.location.reload();
+            } else {
+                alert(t.importError);
+            }
+        };
+        reader.readAsText(file);
+    };
+
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 text-white">
             <div className="bg-[#1C1C1E] dark:bg-gunmetal w-full max-w-sm max-h-[90vh] overflow-y-auto no-scrollbar rounded-3xl p-6 shadow-2xl border border-white/5 animate-[scaleIn_0.2s_ease-out]">
@@ -122,7 +158,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate
                     </button>
                 </div>
 
-                {/* --- LIFETIME STATS SECTION --- */}
+                {/* --- LIFETIME STATS SECTION (2x2 Grid) --- */}
                 <div className="bg-white/5 rounded-3xl p-5 mb-6 border border-white/5">
                     <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-4 text-center border-b border-white/5 pb-2">{t.lifetimeStats}</h4>
                     <div className="grid grid-cols-2 gap-y-6 gap-x-4">
@@ -187,82 +223,55 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate
                     {/* Physics Section */}
                     <div className="border-t border-white/5 pt-4">
                         <p className="text-white font-medium mb-3">{t.physics}</p>
-                        
                         <div className="mb-4">
                             <div className="flex justify-between text-xs text-gray-400 mb-1">
                                 <span>{t.gravity}</span>
                                 <span>{settings.physicsGravity.toFixed(1)}x</span>
                             </div>
-                            <input 
-                                type="range" 
-                                min="0.1" 
-                                max="2.0" 
-                                step="0.1"
-                                value={settings.physicsGravity}
-                                onChange={(e) => handlePhysicsChange('physicsGravity', parseFloat(e.target.value))}
-                                className="w-full accent-primary h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                            />
+                            <input type="range" min="0.1" max="2.0" step="0.1" value={settings.physicsGravity} onChange={(e) => handlePhysicsChange('physicsGravity', parseFloat(e.target.value))} className="w-full accent-primary h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" />
                         </div>
-
                         <div>
                             <div className="flex justify-between text-xs text-gray-400 mb-1">
                                 <span>{t.weight}</span>
                                 <span>{settings.physicsWeight.toFixed(1)}x</span>
                             </div>
-                            <input 
-                                type="range" 
-                                min="0.5" 
-                                max="3.0" 
-                                step="0.1"
-                                value={settings.physicsWeight}
-                                onChange={(e) => handlePhysicsChange('physicsWeight', parseFloat(e.target.value))}
-                                className="w-full accent-primary h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                            />
+                            <input type="range" min="0.5" max="3.0" step="0.1" value={settings.physicsWeight} onChange={(e) => handlePhysicsChange('physicsWeight', parseFloat(e.target.value))} className="w-full accent-primary h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer" />
                         </div>
-                    </div>
-
-                    {/* Haptics Toggle */}
-                    <div className="flex items-center justify-between border-t border-white/5 pt-4">
-                        <div>
-                            <p className="text-white font-medium">{t.haptics}</p>
-                            <p className="text-xs text-gray-400">Vibrate on collision</p>
-                        </div>
-                        <button 
-                            onClick={handleToggleHaptics}
-                            className={`w-12 h-7 rounded-full transition-colors relative ${settings.hapticsEnabled ? 'bg-primary' : 'bg-gray-600'}`}
-                        >
-                            <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${settings.hapticsEnabled ? 'translate-x-5' : ''}`} />
-                        </button>
                     </div>
 
                     {/* Notification Toggle */}
                     <div className="flex items-center justify-between border-t border-white/5 pt-4">
                         <div>
                             <p className="text-white font-medium">{t.reminders}</p>
-                            <p className="text-xs text-gray-400">Notifications</p>
+                            <p className="text-xs text-gray-400">{permissionStatus === 'denied' ? 'Blocked by Browser' : 'Notifications'}</p>
                         </div>
                         <button 
                             onClick={handleToggleNotifications}
-                            className={`w-12 h-7 rounded-full transition-colors relative ${settings.notificationsEnabled ? 'bg-primary' : 'bg-gray-600'}`}
+                            disabled={permissionStatus === 'denied'}
+                            className={`w-12 h-7 rounded-full transition-colors relative ${settings.notificationsEnabled ? 'bg-primary' : 'bg-gray-600'} ${permissionStatus === 'denied' ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                             <div className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${settings.notificationsEnabled ? 'translate-x-5' : ''}`} />
                         </button>
                     </div>
 
-                    {/* Interval Slider (Only if enabled) */}
-                    <div className={`transition-opacity ${settings.notificationsEnabled ? 'opacity-100' : 'opacity-40 pointer-events-none'}`}>
-                        <label className="text-gray-300 text-sm mb-2 block">
-                            Every <span className="text-primary font-bold">{settings.reminderIntervalHours}</span> hours
-                        </label>
-                        <input 
-                            type="range" 
-                            min="1" 
-                            max="12" 
-                            step="1"
-                            value={settings.reminderIntervalHours}
-                            onChange={handleIntervalChange}
-                            className="w-full accent-primary h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                        />
+                    {/* Data Management Section */}
+                    <div className="border-t border-white/5 pt-4">
+                        <p className="text-white font-medium mb-3">{t.dataManagement}</p>
+                        <div className="grid grid-cols-2 gap-3">
+                            <button onClick={handleExport} className="py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
+                                <span className="material-symbols-outlined text-sm">download</span> {t.exportData}
+                            </button>
+                            <button onClick={triggerImport} className="py-2 rounded-xl bg-white/5 hover:bg-white/10 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors">
+                                <span className="material-symbols-outlined text-sm">upload</span> {t.importData}
+                            </button>
+                            <input 
+                                type="file" 
+                                ref={fileInputRef} 
+                                onChange={handleImportFile} 
+                                accept=".json" 
+                                className="hidden" 
+                            />
+                        </div>
                     </div>
 
                      {/* Admin Mode Toggle */}
@@ -279,7 +288,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate
                         </button>
                     </div>
 
-                    {/* DANGER ZONE - RESET */}
+                    {/* DANGER ZONE */}
                     <div className="mt-8 border-t border-red-500/20 pt-6">
                         <p className="text-[10px] font-black text-red-500/50 uppercase tracking-[0.2em] mb-3">{t.dangerZone}</p>
                         <button 
@@ -293,7 +302,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onUpdate
                 </div>
 
                 <div className="mt-6 text-center">
-                    <p className="text-xs text-gray-500">Take Your Time v2.0</p>
+                    <p className="text-xs text-gray-500">Take Your Time v2.1</p>
                 </div>
             </div>
         </div>

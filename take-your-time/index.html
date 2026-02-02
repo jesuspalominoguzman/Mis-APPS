@@ -1,9 +1,14 @@
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Take Your Time</title>
+    <!-- Dynamic Favicon (Green Hourglass on Dark Background) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%232C2C2C%22/><path d=%22M30 25 L70 25 L50 50 L70 75 L30 75 L50 50 Z%22 fill=%22%2313ec80%22/></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%232C2C2C%22/><path d=%22M30 25 L70 25 L50 50 L70 75 L30 75 L50 50 Z%22 fill=%22%2313ec80%22/></svg>">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -38,6 +43,7 @@
             background-color: #2C2C2C;
             color: white;
             overflow: hidden; /* Prevent body scroll for app-like feel */
+            overscroll-behavior: none; /* Prevent pull-to-refresh on mobile */
         }
         /* Hide scrollbar for Chrome, Safari and Opera */
         .no-scrollbar::-webkit-scrollbar {
@@ -50,6 +56,14 @@
         }
         canvas {
             display: block; /* Remove canvas bottom gap */
+        }
+        /* PWA tweaks */
+        @media all and (display-mode: standalone) {
+            body {
+                -webkit-user-select: none;
+                user-select: none;
+                -webkit-tap-highlight-color: transparent;
+            }
         }
     </style>
   <script type="importmap">

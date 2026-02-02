@@ -55,7 +55,14 @@ export const TRANSLATIONS = {
         totalBalls: "Total Balls",
         dangerZone: "Danger Zone",
         resetData: "Reset All Data",
-        resetConfirm: "Are you sure? This will wipe all your history and settings."
+        resetConfirm: "Are you sure? This will wipe all your history and settings.",
+        deleteCategory: "Delete",
+        deleteCategoryConfirm: "Delete this category? Associated time entries will be preserved but orphaned.",
+        dataManagement: "Data Management",
+        exportData: "Export Backup",
+        importData: "Import Backup",
+        importSuccess: "Data imported successfully! Reloading...",
+        importError: "Invalid file format.",
     },
     es: {
         statsTitle: "Resumen",
@@ -95,6 +102,13 @@ export const TRANSLATIONS = {
         totalBalls: "Bolas Totales",
         dangerZone: "Zona de Peligro",
         resetData: "Borrar Datos",
-        resetConfirm: "¿Estás seguro? Esto borrará todo tu historial y configuración."
+        resetConfirm: "¿Estás seguro? Esto borrará todo tu historial y configuración.",
+        deleteCategory: "Eliminar",
+        deleteCategoryConfirm: "¿Eliminar categoría? El historial de tiempo se mantendrá pero quedará huérfano.",
+        dataManagement: "Gestión de Datos",
+        exportData: "Exportar Copia",
+        importData: "Importar Copia",
+        importSuccess: "¡Datos importados! Recargando...",
+        importError: "Formato de archivo inválido.",
     }
 };
