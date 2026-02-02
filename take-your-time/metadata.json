@@ -1,0 +1,5 @@
+{
+  "name": "Take Your Time",
+  "description": "A visual time tracking application with an hourglass aesthetic, using Gemini for productivity insights.",
+  "requestFramePermissions": []
+}
