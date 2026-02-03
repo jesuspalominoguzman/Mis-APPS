@@ -1,15 +1,16 @@
 
 {
-  "name": "Gastro-Logger Premium",
+  "name": "Gastro-Logger",
   "short_name": "GastroLogger",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#FAFAFA",
   "theme_color": "#6B21A8",
   "orientation": "portrait",
+  "scope": "./",
   "icons": [
     {
-      "src": "/icon.svg",
+      "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any maskable"

@@ -1,11 +1,15 @@
 
 <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
   <rect width="512" height="512" rx="100" fill="#6B21A8"/>
-  <text x="50%" y="50%" dy=".1em" text-anchor="middle" dominant-baseline="middle" font-family="serif" font-weight="bold" font-size="320" fill="white">G</text>
-  <defs>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
-      text { font-family: 'Playfair Display', serif; }
-    </style>
-  </defs>
+  
+  <!-- Plato -->
+  <circle cx="256" cy="256" r="140" stroke="white" stroke-width="24"/>
+  <circle cx="256" cy="256" r="80" stroke="white" stroke-width="12" opacity="0.5"/>
+  
+  <!-- Cuchillo -->
+  <path d="M340 160V352" stroke="white" stroke-width="24" stroke-linecap="round"/>
+  
+  <!-- Tenedor -->
+  <path d="M172 352V240M152 160V220C152 235 172 235 172 220V160M192 160V220C192 235 172 235 172 220" stroke="white" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M172 240V352" stroke="white" stroke-width="24" stroke-linecap="round"/>
 </svg>

@@ -1,0 +1,11 @@
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Esta regla es CRUCIAL para evitar el error 404 en aplicaciones React/SPA
+# Redirige cualquier solicitud al index.html para que el router de React maneje la URL
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
