@@ -11,6 +11,7 @@ import Customize from './components/Customize';
 import AddEntryModal from './components/AddEntryModal';
 import SettingsModal from './components/SettingsModal';
 import PomodoroTimer from './components/PomodoroTimer';
+import InstallPrompt from './components/InstallPrompt';
 import { TRANSLATIONS } from './constants';
 
 const App: React.FC = () => {
@@ -96,6 +97,8 @@ const App: React.FC = () => {
 
     return (
         <div className="flex flex-col h-full relative bg-gray-100 dark:bg-background-dark text-gray-900 dark:text-white overflow-hidden font-sans select-none transition-colors duration-500">
+            
+            <InstallPrompt />
             
             <main className="flex-1 relative w-full h-full flex flex-col">
                 
